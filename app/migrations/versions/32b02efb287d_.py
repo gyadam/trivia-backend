@@ -24,12 +24,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     default_categories = [
-        {'id': 1, 'type': 'Science'},
-        {'id': 2, 'type': 'Art'},
-        {'id': 3, 'type': 'Geography'},
-        {'id': 4, 'type': 'History'},
-        {'id': 5, 'type': 'Entertainment'},
-        {'id': 6, 'type': 'Sports'}
+        {'id': '1', 'type': 'Science'},
+        {'id': '2', 'type': 'Art'},
+        {'id': '3', 'type': 'Geography'},
+        {'id': '4', 'type': 'History'},
+        {'id': '5', 'type': 'Entertainment'},
+        {'id': '6', 'type': 'Sports'}
     ]
     op.bulk_insert(category_table, default_categories)
 
