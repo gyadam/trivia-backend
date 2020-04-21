@@ -24,12 +24,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     default_categories = [
-        {'id': '1', 'type': 'Science'},
-        {'id':'2', 'type': 'Art'},
-        {'id':'3', 'type': 'Geography'},
-        {'id':'4', 'type': 'History'},
-        {'id':'5', 'type': 'Entertainment'},
-        {'id':'6', 'type': 'Sports'}
+        {'id': 1, 'type': 'Science'},
+        {'id': 2, 'type': 'Art'},
+        {'id': 3, 'type': 'Geography'},
+        {'id': 4, 'type': 'History'},
+        {'id': 5, 'type': 'Entertainment'},
+        {'id': 6, 'type': 'Sports'}
     ]
     op.bulk_insert(category_table, default_categories)
 
@@ -42,8 +42,8 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     default_questions = [
-        {'id': '1', 'question': 'What year was John Lennon born?', 'answer': '1940', 'category': '5', 'difficulty': '4'},
-        {'id': '2', 'question': 'Which scientist developed the theory of relativity?', 'answer': 'Albert Einstein', 'category': '1', 'difficulty': '2'}
+        {'id': 1, 'question': 'What year was John Lennon born?', 'answer': '1940', 'category': 5, 'difficulty': 4},
+        {'id': 2, 'question': 'Which scientist developed the theory of relativity?', 'answer': 'Albert Einstein', 'category': 1, 'difficulty': 2}
     ]
     op.bulk_insert(question_table, default_questions)
     # ### end Alembic commands ###
