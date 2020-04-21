@@ -14,7 +14,7 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
 
-    cors = CORS(app, resources={r"/*": {"origins": "*"}})
+    cors = CORS(app)
 
     @app.after_request
     def after_request(response):
@@ -104,8 +104,6 @@ def create_app(test_config=None):
 
     @app.route('/categories/<int:category_id>/questions')
     def get_categorized_questions(category_id):
-        print("id: ", category_id)
-        print("id type: ", type(category_id))
         categorized_questions = Question.query.filter_by(
             category=category_id).all()
         formatted_questions = [question.format()
