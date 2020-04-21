@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 32b02efb287d
+Revision ID: 7ee21e6de6da
 Revises: 
-Create Date: 2020-04-21 12:59:20.868267
+Create Date: 2020-04-21 16:08:10.023800
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '32b02efb287d'
+revision = '7ee21e6de6da'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,12 +24,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     default_categories = [
-        {'id': '1', 'type': 'Science'},
-        {'id': '2', 'type': 'Art'},
-        {'id': '3', 'type': 'Geography'},
-        {'id': '4', 'type': 'History'},
-        {'id': '5', 'type': 'Entertainment'},
-        {'id': '6', 'type': 'Sports'}
+        {'id': 1, 'type': 'Science'},
+        {'id': 2, 'type': 'Art'},
+        {'id': 3, 'type': 'Geography'},
+        {'id': 4, 'type': 'History'},
+        {'id': 5, 'type': 'Entertainment'},
+        {'id': 6, 'type': 'Sports'}
     ]
     op.bulk_insert(category_table, default_categories)
 
@@ -37,13 +37,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('question', sa.String(), nullable=True),
     sa.Column('answer', sa.String(), nullable=True),
-    sa.Column('category', sa.String(), nullable=True),
+    sa.Column('category', sa.Integer(), nullable=True),
     sa.Column('difficulty', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     default_questions = [
-        {'id': 1, 'question': 'What year was John Lennon born?', 'answer': '1940', 'category': '5', 'difficulty': 4},
-        {'id': 2, 'question': 'Which scientist developed the theory of relativity?', 'answer': 'Albert Einstein', 'category': '1', 'difficulty': 2}
+        {'id': 1, 'question': 'What year was John Lennon born?', 'answer': '1940', 'category': 5, 'difficulty': 4},
+        {'id': 2, 'question': 'Which scientist developed the theory of relativity?', 'answer': 'Albert Einstein', 'category': 1, 'difficulty': 2}
     ]
     op.bulk_insert(question_table, default_questions)
     # ### end Alembic commands ###
