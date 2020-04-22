@@ -88,7 +88,7 @@ def create_app(test_config=None):
     @app.route('/questions/<int:question_id>', methods=['GET','PATCH','DELETE'])
     def access_question(question_id):
         error = False
-        
+        body = request.get_json()
         if request.method == 'GET':
             try:
                 question = Question.query.filter_by(id=question_id).one_or_none().format()
