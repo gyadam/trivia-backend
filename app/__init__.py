@@ -111,6 +111,7 @@ def create_app(test_config=None):
                 question.answer = ans
                 question.category = cat
                 question.difficulty = diff
+                question.update()
                 
             except SQLAlchemyError as e:
                 print(e)
