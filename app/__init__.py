@@ -85,18 +85,30 @@ def create_app(test_config=None):
             'categories': categories_dict
         }) 
 
-    @app.route('/questions/<int:question_id>', methods=['DELETE'])
-    def delete_question(question_id):
+    @app.route('/questions/<int:question_id>', methods=['GET','DELETE'])
+    def access_question(question_id):
         error = False
-        try:
-            Question.query.filter_by(id=question_id).one_or_none().delete()
-        except:
-            error = True
-            abort(422)
-        success = False if error else True
-        return jsonify({
-            'success': success
-        })
+        if request.method == 'DELETE':
+            try:
+                Question.query.filter_by(id=question_id).one_or_none().delete()
+            except:
+                error = True
+                abort(422)
+            success = False if error else True
+            return jsonify({
+                'success': success
+            })
+        else:
+            try:
+                question = Question.query.filter_by(id=question_id).one_or_none().format()
+            except:
+                error = True
+                abort(422)
+            success = False if error else True
+            return jsonify({
+                'question': question
+                'success': success
+            })
 
     @app.route('/add')
     def get_form():
