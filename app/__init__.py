@@ -3,6 +3,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
+from sqlalchemy.exc import SQLAlchemyError
 
 from models import setup_db, Question, Category
 
@@ -49,7 +50,8 @@ def create_app(test_config=None):
                     new_question = Question(
                         question=quest, answer=ans, category=cat, difficulty=diff)
                     new_question.insert()
-                except:
+                except SQLAlchemyError as e:
+                    print(e)
                     error = True
                     abort(422)
                 success = False if error else True
