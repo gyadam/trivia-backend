@@ -109,9 +109,9 @@ def create_app(test_config=None):
             try:
                 question = Question.query.filter_by(id=question_id).one_or_none()
                 question.update({
-                    question = quest
-                    answer = ans
-                    category = cat
+                    question = quest,
+                    answer = ans,
+                    category = cat,
                     difficulty = diff
                 })         
             except SQLAlchemyError as e:
@@ -122,7 +122,7 @@ def create_app(test_config=None):
             return jsonify({
                 'success': success
             })
-            
+
         elif request.method == 'DELETE':
             try:
                 Question.query.filter_by(id=question_id).one_or_none().delete()
