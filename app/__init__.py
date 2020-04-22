@@ -43,8 +43,8 @@ def create_app(test_config=None):
             else:
                 quest = body['question']
                 ans = body['answer']
-                cat = body['category']
-                diff = body['difficulty']
+                cat = int(body['category'])
+                diff = int(body['difficulty'])
                 try:
                     new_question = Question(
                         question=quest, answer=ans, category=cat, difficulty=diff)
