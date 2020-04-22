@@ -100,7 +100,6 @@ def create_app(test_config=None):
                 'question': question,
                 'success': success
             })
-
         elif request.method == 'PATCH':
             quest = body['question']
             ans = body['answer']
@@ -108,12 +107,11 @@ def create_app(test_config=None):
             diff = int(body['difficulty'])
             try:
                 question = Question.query.filter_by(id=question_id).one_or_none()
-                question.update({
-                    question = quest,
-                    answer = ans,
-                    category = cat,
-                    difficulty = diff
-                })         
+                question.question = quest
+                question.answer = ans
+                question.category = cat
+                question.difficulty = diff
+                
             except SQLAlchemyError as e:
                 print(e)
                 error = True
@@ -122,7 +120,6 @@ def create_app(test_config=None):
             return jsonify({
                 'success': success
             })
-
         elif request.method == 'DELETE':
             try:
                 Question.query.filter_by(id=question_id).one_or_none().delete()
