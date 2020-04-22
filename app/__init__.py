@@ -85,20 +85,11 @@ def create_app(test_config=None):
             'categories': categories_dict
         }) 
 
-    @app.route('/questions/<int:question_id>', methods=['GET','DELETE'])
+    @app.route('/questions/<int:question_id>', methods=['GET','PATCH','DELETE'])
     def access_question(question_id):
         error = False
-        if request.method == 'DELETE':
-            try:
-                Question.query.filter_by(id=question_id).one_or_none().delete()
-            except:
-                error = True
-                abort(422)
-            success = False if error else True
-            return jsonify({
-                'success': success
-            })
-        else:
+        
+        if request.method == 'GET':
             try:
                 question = Question.query.filter_by(id=question_id).one_or_none().format()
             except:
@@ -107,6 +98,39 @@ def create_app(test_config=None):
             success = False if error else True
             return jsonify({
                 'question': question,
+                'success': success
+            })
+
+        elif request.method == 'PATCH':
+            quest = body['question']
+            ans = body['answer']
+            cat = int(body['category'])
+            diff = int(body['difficulty'])
+            try:
+                question = Question.query.filter_by(id=question_id).one_or_none()
+                question.update({
+                    question = quest
+                    answer = ans
+                    category = cat
+                    difficulty = diff
+                })         
+            except SQLAlchemyError as e:
+                print(e)
+                error = True
+                abort(422)
+            success = False if error else True
+            return jsonify({
+                'success': success
+            })
+            
+        elif request.method == 'DELETE':
+            try:
+                Question.query.filter_by(id=question_id).one_or_none().delete()
+            except:
+                error = True
+                abort(422)
+            success = False if error else True
+            return jsonify({
                 'success': success
             })
 
