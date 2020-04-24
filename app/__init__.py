@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
 from sqlalchemy.exc import SQLAlchemyError
+from .auth.auth import AuthError, requires_auth
 
 from models import setup_db, Question, Category
 
@@ -24,55 +25,62 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods',
                              'GET,PATCH,POST,DELETE,OPTIONS')
         return response
-
-    @app.route('/questions', methods=['GET', 'POST'])
-    def get_post_search_question():
+    
+    @app.route('/questions', methods=['GET'])
+    @requires_auth('get:questions')
+    def get_questions(jwt):
         error = False
-        if request.method == 'POST':
-            body = request.get_json()
-            if 'searchTerm' in body:
-                searchterm = body['searchTerm']
-                search_results = Question.query.filter(
-                    Question.question.ilike('%' + searchterm + '%')).all()
-                formatted_results = [result.format()
-                                     for result in search_results]
-                return jsonify({
-                    'success': True,
-                    'questions': formatted_results,
-                    'totalQuestions': len(formatted_results)
-                })
-            else:
-                quest = body['question']
-                ans = body['answer']
-                cat = int(body['category'])
-                diff = int(body['difficulty'])
-                try:
-                    new_question = Question(
-                        question=quest, answer=ans, category=cat, difficulty=diff)
-                    new_question.insert()
-                except SQLAlchemyError as e:
-                    print(e)
-                    error = True
-                    abort(422)
-                success = False if error else True
-                return jsonify({
-                    'success': success
-                })
+        page = request.args.get('page', 1, type=int)
+        start = (page - 1) * 10
+        end = start + 10
+
+        questions = Question.query.all()
+        formatted_questions = [question.format() for question in questions]
+        categories = Category.query.all()
+        categories_dict = {
+        category.id: category.type for category in categories}
+
+        return jsonify({
+        'success': True,
+        'questions': formatted_questions[start:end],
+        'total_questions': len(formatted_questions),
+        'categories': categories_dict
+        })
+
+    @app.route('/questions', methods=['POST'])
+    @requires_auth('post:questions')
+    def add_or_search_questions(jwt):
+        error = False
+        body = request.get_json()
+        if 'searchTerm' in body:
+            searchterm = body['searchTerm']
+            search_results = Question.query.filter(
+                Question.question.ilike('%' + searchterm + '%')).all()
+            formatted_results = [result.format()
+                                    for result in search_results]
+            return jsonify({
+                'success': True,
+                'questions': formatted_results,
+                'totalQuestions': len(formatted_results)
+            })
         else:
-          page = request.args.get('page', 1, type=int)
-          start = (page - 1) * 10
-          end = start + 10
-          questions = Question.query.all()
-          formatted_questions = [question.format() for question in questions]
-          categories = Category.query.all()
-          categories_dict = {
-            category.id: category.type for category in categories}
-          return jsonify({
-            'success': True,
-            'questions': formatted_questions[start:end],
-            'total_questions': len(formatted_questions),
-            'categories': categories_dict
-          })
+            quest = body['question']
+            ans = body['answer']
+            cat = int(body['category'])
+            diff = int(body['difficulty'])
+            try:
+                new_question = Question(
+                    question=quest, answer=ans, category=cat, difficulty=diff)
+                new_question.insert()
+            except SQLAlchemyError as e:
+                print(e)
+                error = True
+                abort(422)
+            success = False if error else True
+            return jsonify({
+                'success': success
+            })
+
 
     @app.route('/categories')
     # return all categories
@@ -85,52 +93,63 @@ def create_app(test_config=None):
             'categories': categories_dict
         }) 
 
-    @app.route('/questions/<int:question_id>', methods=['GET','PATCH','DELETE'])
-    def access_question(question_id):
+
+    @app.route('/questions/<int:question_id>', methods=['GET'])
+    @requires_auth('get:question')
+    def get_question(jwt, question_id):
         error = False
         body = request.get_json()
-        if request.method == 'GET':
-            try:
-                question = Question.query.filter_by(id=question_id).one_or_none().format()
-            except:
-                error = True
-                abort(422)
-            success = False if error else True
-            return jsonify({
-                'question': question,
-                'success': success
-            })
-        elif request.method == 'PATCH':
-            quest = body['question']
-            ans = body['answer']
-            cat = int(body['category'])
-            diff = int(body['difficulty'])
-            try:
-                question = Question.query.filter_by(id=question_id).one_or_none()
-                question.question = quest
-                question.answer = ans
-                question.category = cat
-                question.difficulty = diff
-                question.update()
-                
-            except SQLAlchemyError as e:
-                print(e)
-                error = True
-                abort(422)
-            success = False if error else True
-            return jsonify({
-                'success': success
-            })
-        elif request.method == 'DELETE':
-            try:
-                Question.query.filter_by(id=question_id).one_or_none().delete()
-            except:
-                error = True
-                abort(422)
-            success = False if error else True
-            return jsonify({
-                'success': success
-            })
+        try:
+            question = Question.query.filter_by(id=question_id).one_or_none().format()
+        except:
+            error = True
+            abort(422)
+        success = False if error else True
+        return jsonify({
+            'question': question,
+            'success': success
+        })
+
+
+    @app.route('/questions/<int:question_id>', methods=['PATCH'])
+    @requires_auth('post:question')
+    def edit_question(jwt, question_id):
+        error = False
+        quest = body['question']
+        ans = body['answer']
+        cat = int(body['category'])
+        diff = int(body['difficulty'])
+        try:
+            question = Question.query.filter_by(id=question_id).one_or_none()
+            question.question = quest
+            question.answer = ans
+            question.category = cat
+            question.difficulty = diff
+            question.update()
+            
+        except SQLAlchemyError as e:
+            print(e)
+            error = True
+            abort(422)
+        success = False if error else True
+        return jsonify({
+            'success': success
+        })
+
+
+    @app.route('/questions/<int:question_id>', methods=['DELETE'])
+    @requires_auth('delete:question')
+    def delete_question(jwt, question_id):
+        error = False
+        try:
+            Question.query.filter_by(id=question_id).one_or_none().delete()
+        except:
+            error = True
+            abort(422)
+        success = False if error else True
+        return jsonify({
+            'success': success
+        })
 
     @app.route('/add')
     def get_form():
@@ -139,7 +158,8 @@ def create_app(test_config=None):
         })
 
     @app.route('/categories/<int:category_id>/questions')
-    def get_categorized_questions(category_id):
+    @requires_auth('get:questions')
+    def get_categorized_questions(jwt, category_id):
         categorized_questions = Question.query.filter_by(
             category=category_id).all()
         formatted_questions = [question.format()
@@ -185,6 +205,14 @@ def create_app(test_config=None):
             "error": 422,
             "message": "Unprocessable Entity"
         }), 422
+
+    @app.errorhandler(AuthError)
+    def authorization_error(error):
+        return jsonify({
+            "success": False,
+            "error": 401,
+            "message": "authorization error"
+        }), 401
 
     return app
 
