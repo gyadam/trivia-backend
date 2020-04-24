@@ -115,6 +115,7 @@ def create_app(test_config=None):
     @requires_auth('patch:questions')
     def edit_question(jwt, question_id):
         error = False
+        body = request.get_json()
         quest = body['question']
         ans = body['answer']
         cat = int(body['category'])
