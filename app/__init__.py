@@ -95,7 +95,7 @@ def create_app(test_config=None):
 
 
     @app.route('/questions/<int:question_id>', methods=['GET'])
-    @requires_auth('get:question')
+    @requires_auth('get:questions')
     def get_question(jwt, question_id):
         error = False
         body = request.get_json()
@@ -112,7 +112,7 @@ def create_app(test_config=None):
 
 
     @app.route('/questions/<int:question_id>', methods=['PATCH'])
-    @requires_auth('post:question')
+    @requires_auth('post:questions')
     def edit_question(jwt, question_id):
         error = False
         quest = body['question']
@@ -138,7 +138,7 @@ def create_app(test_config=None):
 
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
-    @requires_auth('delete:question')
+    @requires_auth('delete:questions')
     def delete_question(jwt, question_id):
         error = False
         try:
