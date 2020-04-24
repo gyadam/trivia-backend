@@ -112,7 +112,7 @@ def create_app(test_config=None):
 
 
     @app.route('/questions/<int:question_id>', methods=['PATCH'])
-    @requires_auth('post:questions')
+    @requires_auth('patch:questions')
     def edit_question(jwt, question_id):
         error = False
         quest = body['question']
