@@ -27,8 +27,8 @@ def create_app(test_config=None):
         return response
     
     @app.route('/questions', methods=['GET'])
-    # @requires_auth('get:questions')
-    def get_questions():
+    @requires_auth('get:questions')
+    def get_questions(jwt):
         error = False
         page = request.args.get('page', 1, type=int)
         start = (page - 1) * 10
