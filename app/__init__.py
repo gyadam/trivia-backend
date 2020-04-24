@@ -25,7 +25,7 @@ def create_app(test_config=None):
         response.headers.add('Access-Control-Allow-Methods',
                              'GET,PATCH,POST,DELETE,OPTIONS')
         return response
-    
+
     @app.route('/questions', methods=['GET'])
     @requires_auth('get:questions')
     def get_questions(jwt):
@@ -38,13 +38,13 @@ def create_app(test_config=None):
         formatted_questions = [question.format() for question in questions]
         categories = Category.query.all()
         categories_dict = {
-        category.id: category.type for category in categories}
+            category.id: category.type for category in categories}
 
         return jsonify({
-        'success': True,
-        'questions': formatted_questions[start:end],
-        'totalQuestions': len(formatted_questions),
-        'categories': categories_dict
+            'success': True,
+            'questions': formatted_questions[start:end],
+            'totalQuestions': len(formatted_questions),
+            'categories': categories_dict
         })
 
     @app.route('/questions', methods=['POST'])
@@ -57,7 +57,7 @@ def create_app(test_config=None):
             search_results = Question.query.filter(
                 Question.question.ilike('%' + searchterm + '%')).all()
             formatted_results = [result.format()
-                                    for result in search_results]
+                                 for result in search_results]
             return jsonify({
                 'success': True,
                 'questions': formatted_results,
@@ -81,7 +81,6 @@ def create_app(test_config=None):
                 'success': success
             })
 
-
     @app.route('/categories')
     # return all categories
     def get_categories():
@@ -91,8 +90,7 @@ def create_app(test_config=None):
         return jsonify({
             'success': True,
             'categories': categories_dict
-        }) 
-
+        })
 
     @app.route('/questions/<int:question_id>', methods=['GET'])
     @requires_auth('get:questions')
@@ -100,7 +98,8 @@ def create_app(test_config=None):
         error = False
         body = request.get_json()
         try:
-            question = Question.query.filter_by(id=question_id).one_or_none().format()
+            question = Question.query.filter_by(
+                id=question_id).one_or_none().format()
         except:
             error = True
             abort(422)
@@ -109,7 +108,6 @@ def create_app(test_config=None):
             'question': question,
             'success': success
         })
-
 
     @app.route('/questions/<int:question_id>', methods=['PATCH'])
     @requires_auth('patch:questions')
@@ -127,7 +125,7 @@ def create_app(test_config=None):
             question.category = cat
             question.difficulty = diff
             question.update()
-            
+
         except SQLAlchemyError as e:
             print(e)
             error = True
@@ -136,7 +134,6 @@ def create_app(test_config=None):
         return jsonify({
             'success': success
         })
-
 
     @app.route('/questions/<int:question_id>', methods=['DELETE'])
     @requires_auth('delete:questions')
@@ -161,10 +158,10 @@ def create_app(test_config=None):
     @app.route('/categories/<int:category_id>/questions')
     @requires_auth('get:questions')
     def get_categorized_questions(jwt, category_id):
-        categorized_questions = Question.query.filter_by(
+        cat_questions = Question.query.filter_by(
             category=category_id).all()
         formatted_questions = [question.format()
-                               for question in categorized_questions]
+                               for question in cat_questions]
         return jsonify({
             'success': True,
             'questions': formatted_questions,
@@ -178,13 +175,13 @@ def create_app(test_config=None):
         print(body)
         category_id = body['quiz_category']['id']
         if category_id == 0:
-            categorized_questions = Question.query.all()
+            cat_questions = Question.query.all()
         else:
-            categorized_questions = Question.query.filter_by(
+            cat_questions = Question.query.filter_by(
                 category=category_id).all()
         prev_questions = body['previous_questions']
         formatted_questions = [
-            q.format() for q in categorized_questions if q.id not in prev_questions]
+            q.format() for q in cat_questions if q.id not in prev_questions]
         random.shuffle(formatted_questions)
         return jsonify({
             'success': True,
@@ -216,6 +213,7 @@ def create_app(test_config=None):
         }), 401
 
     return app
+
 
 app = create_app()
 
