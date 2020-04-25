@@ -29,9 +29,11 @@ class TriviaTestCase(unittest.TestCase):
 
     def tearDown(self):
         # Remove any test questions added by test cases
-        test_entries = Question.query.filter_by(question='Test question')
-        for test_entry in test_entries:
-            self.client().delete('/questions/' + str(test_entry.id))
+        test_entries = Question.query.filter_by(question='Test question').all()
+        ids = [test_entry.id for test_entry in test_entries]
+        for id in ids:
+            self.client().delete('/questions/' + str(id),
+                                 headers={'Authorization': self.admin_token})
 
     def test_get_paginated_questions(self):
         # test public (unauthenticated) access
@@ -40,13 +42,15 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 401)
 
         # test quizmaster access
-        res = self.client().get('/questions', headers={'Authorization': self.quizmaster_token})
+        res = self.client().get(
+            '/questions', headers={'Authorization': self.quizmaster_token})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['questions'])
 
         # test admin access
-        res = self.client().get('/questions', headers={'Authorization': self.admin_token})
+        res = self.client().get(
+            '/questions', headers={'Authorization': self.admin_token})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['questions'])
@@ -61,7 +65,7 @@ class TriviaTestCase(unittest.TestCase):
         # test unallowed method
         mock_data = json.dumps({'category': 'Engineering'})
         res = self.client().post('/categories', data=mock_data,
-                                      content_type='application/json')
+                                 content_type='application/json')
         self.assertEqual(res.status_code, 405)
 
     def test_post_new_question(self):
@@ -75,7 +79,7 @@ class TriviaTestCase(unittest.TestCase):
         # test public (unauthenticated) access
         num_questions_before = Question.query.count()
         res = self.client().post('/questions', data=mock_data,
-                                      content_type='application/json')
+                                 content_type='application/json')
         num_questions_after = Question.query.count()
 
         self.assertEqual(res.status_code, 401)
@@ -84,8 +88,9 @@ class TriviaTestCase(unittest.TestCase):
         # test quizmaster access
         num_questions_before = Question.query.count()
         res = self.client().post('/questions', data=mock_data,
-                                      content_type='application/json',
-                                      headers={'Authorization': self.quizmaster_token})
+                                 content_type='application/json',
+                                 headers={'Authorization':
+                                          self.quizmaster_token})
         num_questions_after = Question.query.count()
 
         self.assertEqual(res.status_code, 401)
@@ -94,8 +99,9 @@ class TriviaTestCase(unittest.TestCase):
         # test admin access
         num_questions_before = Question.query.count()
         res = self.client().post('/questions', data=mock_data,
-                                      content_type='application/json',
-                                      headers={'Authorization': self.admin_token})
+                                 content_type='application/json',
+                                 headers={'Authorization':
+                                          self.admin_token})
         num_questions_after = Question.query.count()
 
         self.assertEqual(res.status_code, 200)
@@ -104,7 +110,10 @@ class TriviaTestCase(unittest.TestCase):
     def test_search(self):
         # Add test question to search for
         test_question = Question(
-            question='Test question', answer='Test answer', category=1, difficulty=1)
+            question='Test question',
+            answer='Test answer',
+            category=1,
+            difficulty=1)
         test_question.insert()
         # Search term
         mock_data = json.dumps({
@@ -120,18 +129,19 @@ class TriviaTestCase(unittest.TestCase):
         # test quizmaster access
         res = self.client().post('/questions', data=mock_data,
                                  content_type='application/json',
-                                 headers={'Authorization': self.quizmaster_token})
+                                 headers={'Authorization':
+                                          self.quizmaster_token})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 401)
 
         # test admin access
         res = self.client().post('/questions', data=mock_data,
                                  content_type='application/json',
-                                 headers={'Authorization': self.admin_token})
+                                 headers={'Authorization':
+                                          self.admin_token})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['questions'])
-        
 
     def test_categorized_questions(self):
         # test public (unauthenticated) access
@@ -140,7 +150,8 @@ class TriviaTestCase(unittest.TestCase):
 
         # test quizmaster access
         res = self.client().get('/categories/1/questions',
-                                headers={'Authorization': self.quizmaster_token})
+                                headers={'Authorization':
+                                         self.quizmaster_token})
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['questions'])
@@ -151,6 +162,21 @@ class TriviaTestCase(unittest.TestCase):
         data = json.loads(res.data)
         self.assertEqual(res.status_code, 200)
         self.assertTrue(data['questions'])
+
+    def test_quiz(self):
+        # test public (unauthenticated) access
+        mock_data = json.dumps({
+            'quiz_category': {
+                'type': 'Science',
+                'id': 1
+            },
+            'previous_questions': []
+        })
+        res = self.client().post('/quizzes', data=mock_data,
+                                 content_type='application/json')
+        data = json.loads(res.data)
+        self.assertEqual(res.status_code, 200)
+        self.assertTrue(data['question'])
 
 
 # Make the tests conveniently executable
