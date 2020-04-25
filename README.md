@@ -201,9 +201,9 @@ Key Dependencies:
 
 **Database Setup**
 
-With Postgres running, restore a database using the trivia.psql file provided. After creating a database called ```trivia```, from the backend folder in terminal run:
+If necessary, a mock database can be restored using the trivia.psql file provided. After creating a database called ```trivia```, execute:
 
-``` psql trivia < trivia.psql ```
+```trivia-backend$ psql trivia < trivia.psql ```
 
 **Running the server**
 First setup all necessary environment variables:
