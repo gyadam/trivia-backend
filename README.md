@@ -1,20 +1,22 @@
-# Trivia API
+# Udacity Trivia
 
 ### Overview
 
-Trivia API is a backend web development project created for the Full Stack Developer Nanodegree at Udacity. The goal of the project was to:
+Udacity Trivia is the capstone project created for the Full Stack Developer Nanodegree at Udacity. The goal of the project was to:
 
-* Create all necessary endpoints on the backend to serve the frontend, enabling the visitor of the website to:
-    * View all trivia questions stored in a database
-    * View trivia questions based on their category
-    * Add and delete questions to the database
-    * Play trivia in a chosen category, getting random questions from the database
+* Create a database using Flask-SQLAlchemy
+* Create a backend API following RESTful principles
+* Use Auth0 to authenticate users with JSON web tokens (JWTs)
+* Use roles-based access control (RBAC) to authorize users to make API calls
 * Apply test-driven development, writing unit tests for each endpoint
-* Make modifications to the frontend and database if necessary
+* Deploy the backend (and frontend) application to Heroku
 
-The site runs on localhost and was created only for educational purposes.
+Both the frontend and backend of Udacity Trivia are hosted on heroku, and are accessible at the folling URLs:
 
-<img src="./images/trivia_website.png" alt="Homepage of Udacity Trivia" width="700"/>
+* Frontend: https://udacitytrivia.herokuapp.com/
+* Backend: http://trivbackend.herokuapp.com/
+
+<img src="./images/homepage.png" alt="Homepage of Udacity Trivia" width="700"/>
 
 ### Tech stack
 
@@ -131,13 +133,6 @@ All endpoints accept JSON encoded requests and return JSON encoded bodies. The f
     }
     ```
             
-
----
-
-```/add```
-* ```GET``` request:
-    * assists in loading the 'Add' page
-    * returns the boolean ```success``` parameter in the body
     
 ---
 
@@ -195,7 +190,7 @@ With Postgres running, restore a database using the trivia.psql file provided. A
 To run the server, execute:
 
 ```
-export FLASK_APP=flaskr
+export FLASK_APP=app
 export FLASK_ENV=development
 flask run
 ```
@@ -203,8 +198,14 @@ flask run
 **Running the frontend**
 
 First, install [Node.js and npm](https://nodejs.org/en/).
-
-Then, to run the frontend, execute:
+Then, install dependencies:
 ```
+npm install
+```
+
+Then, to build and run the frontend, execute:
+```
+npm run build
 npm start
+
 ```
