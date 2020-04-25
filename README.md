@@ -4,17 +4,18 @@
 
 Udacity Trivia is the capstone project created for the Full Stack Developer Nanodegree at Udacity. The goal of the project was to:
 
-* Create a database using Flask-SQLAlchemy
 * Create a backend API following RESTful principles
+* Create a frontend to interact with the backend
+* Create a database using Flask-SQLAlchemy
 * Use Auth0 to authenticate users with JSON web tokens (JWTs)
 * Use roles-based access control (RBAC) to authorize users to make API calls
 * Apply test-driven development, writing unit tests for each endpoint
 * Deploy the backend (and frontend) application to Heroku
 
-Both the frontend and backend of Udacity Trivia are hosted on heroku, and are accessible at the folling URLs:
+Both the frontend and backend of Udacity Trivia are hosted on [Heroku](https://www.heroku.com/), and are accessible at the folling URLs:
 
-* Frontend: https://udacitytrivia.herokuapp.com/
-* Backend: http://trivbackend.herokuapp.com/
+* **Frontend**: https://udacitytrivia.herokuapp.com/
+* **Backend**: http://trivbackend.herokuapp.com/
 
 <img src="./images/list_view.png" alt="Homepage of Udacity Trivia" width="700"/>
 
@@ -32,9 +33,9 @@ The frontend can be visited at https://udacitytrivia.herokuapp.com/, and allows 
 
 <img src="./images/quiz_view.png" alt="Quiz view" width="700"/>
 
-The users can also log in to access further features of the website. Two roles were setup using Auth0:
-* Admin: has permission to view, add, delete and edit all questions
-* Quizmaster: has permission to view questions along with their answers, but cannot modify them
+Users can also log in to access further features of the website. Two roles were setup using Auth0:
+* **Admin**: has permission to view, add, delete and edit all questions
+* **Quizmaster**: has permission to view questions along with their answers, but cannot modify them
 
 After login, the navigation bar shows additional options:
 
@@ -44,9 +45,9 @@ Admins can add new questions in the Add tab:
 
 <img src="./images/add_question.png" alt="Add questions" width="700"/>
 
-The frontend uses Auth0 to authenticate users and grab the JWT with the user information (including RBAC info). The JWT is included in API calls, and verified by the backend to make sure the user has the required permissions to access the requested data.
+The frontend uses [Auth0](https://auth0.com/) to authenticate users and grab the JWT with the user information (including RBAC info). The JWT is included in API calls, and verified by the backend to make sure the user has the required permissions to access the requested data.
 
-### Backend endpoints
+### Backend
 
 All endpoints accept JSON encoded requests and return JSON encoded bodies. The following endpoints were implemented to serve requests from the frontend, interacting with the database:
 
@@ -101,8 +102,6 @@ All endpoints accept JSON encoded requests and return JSON encoded bodies. The f
     }
     ```
     
-    
-
 ---
 
 ```/questions/[int:question_id] ```
