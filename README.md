@@ -37,6 +37,10 @@ Users can also log in to access further features of the website. Two roles were 
 * **Admin**: has permission to view, add, delete and edit all questions
 * **Quizmaster**: has permission to view questions along with their answers, but cannot modify them
 
+Specifically, the following permissions are assigned to each role:
+* **Admin**: ```get:questions```, ```add:questions```, ```patch:questions```, ```delete:questions```
+* **Quizmaster**: ```get:questions```
+
 After login, the navigation bar shows additional options:
 
 <img src="./images/list_view.png" alt="List view" width="700"/>
