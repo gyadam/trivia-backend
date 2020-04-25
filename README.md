@@ -4,8 +4,9 @@
 
 Udacity Trivia is the capstone project created for the Full Stack Developer Nanodegree at Udacity. The goal of the project was to:
 
-* Create a database using Flask-SQLAlchemy
 * Create a backend API following RESTful principles
+* Create a frontend to interact with the backend
+* Create a database using Flask-SQLAlchemy
 * Use Auth0 to authenticate users with JSON web tokens (JWTs)
 * Use roles-based access control (RBAC) to authorize users to make API calls
 * Apply test-driven development, writing unit tests for each endpoint
