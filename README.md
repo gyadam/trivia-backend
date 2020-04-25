@@ -105,10 +105,14 @@ All endpoints accept JSON encoded requests and return JSON encoded bodies. The f
       "totalQuestions": 1
     }
     ```
-    
+
 ---
 
 ```/questions/[int:question_id] ```
+* ```PATCH``` request:
+    * updates the question with ID == ```question_id``` in the database based on the properties provided in the request body
+    * returns the boolean ```success``` parameter in the body
+
 * ```DELETE``` request:
     * deletes the question with ID == ```question_id``` from the database
     * returns the boolean ```success``` parameter in the body
