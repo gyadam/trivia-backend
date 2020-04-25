@@ -16,7 +16,7 @@ Both the frontend and backend of Udacity Trivia are hosted on heroku, and are ac
 * Frontend: https://udacitytrivia.herokuapp.com/
 * Backend: http://trivbackend.herokuapp.com/
 
-<img src="./images/homepage.png" alt="Homepage of Udacity Trivia" width="700"/>
+<img src="./images/list_view.png" alt="Homepage of Udacity Trivia" width="700"/>
 
 ### Tech stack
 
@@ -163,14 +163,14 @@ All endpoints accept JSON encoded requests and return JSON encoded bodies. The f
 To start and run the local development server, initialize and activate a virtual environment:
 
 ```
-$ cd YOUR_PROJECT_DIRECTORY_PATH/
-$ virtualenv --no-site-packages env
-$ source env/bin/activate
+$ cd trivia-backend/
+$ virtualenv --no-site-packages venv
+$ source venv/bin/activate
 ```
 
 Install dependencies:
 ```
-$ pip install -r requirements.txt
+(venv) trivia-backend$ pip install -r requirements.txt
 ```
 
 Key Dependencies:
@@ -186,13 +186,15 @@ With Postgres running, restore a database using the trivia.psql file provided. A
 ``` psql trivia < trivia.psql ```
 
 **Running the server**
+First setup all necessary environment variables:
+```
+trivia-backend$ source setup.sh
+```
 
-To run the server, execute:
+Then, to run the server, execute:
 
 ```
-export FLASK_APP=app
-export FLASK_ENV=development
-flask run
+(venv) trivia-backend$ flask run
 ```
 
 **Running the frontend**
@@ -200,12 +202,19 @@ flask run
 First, install [Node.js and npm](https://nodejs.org/en/).
 Then, install dependencies:
 ```
-npm install
+trivia-frontend$ npm install
 ```
 
 Then, to build and run the frontend, execute:
 ```
-npm run build
-npm start
+trivia-frontend$ npm run build
+trivia-frontend$ npm start
 
 ```
+
+**Running the API endpoint tests**
+To run the unit tests on the endpoints, run:
+```
+(venv) trivia-backend$ python test_flaskr.py
+```
+The unit tests make calls to the backend API deployed to Heroku, using test data which is deleted in the teardown function. Role-based tests are executed using the JWT tokens which are set as environment variables in ```setup.sh```.
