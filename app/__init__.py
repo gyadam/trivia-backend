@@ -149,12 +149,6 @@ def create_app(test_config=None):
             'success': success
         })
 
-    @app.route('/add')
-    def get_form():
-        return jsonify({
-            'success': True,
-        })
-
     @app.route('/categories/<int:category_id>/questions')
     @requires_auth('get:questions')
     def get_categorized_questions(jwt, category_id):
@@ -172,7 +166,6 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def play_quiz():
         body = request.get_json()
-        print(body)
         category_id = body['quiz_category']['id']
         if category_id == 0:
             cat_questions = Question.query.all()
