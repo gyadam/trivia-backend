@@ -20,7 +20,6 @@ class AuthError(Exception):
 # Auth Header
 def get_token_auth_header():
     if 'Authorization' not in request.headers:
-        print("No authorization info found!")
         raise AuthError({
             'code': 'invalid_header',
             'description': 'No authorization info found.'
@@ -30,13 +29,11 @@ def get_token_auth_header():
     header_parts = auth_header.split(' ')
 
     if len(header_parts) != 2:
-        print("Bad header data!")
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Invalid header data.'
         }, 401)
     elif header_parts[0].lower() != 'bearer':
-        print("Bad authorization type!")
         raise AuthError({
             'code': 'wrong_authorization_type',
             'description': 'Wrong authorization type.'
@@ -46,14 +43,12 @@ def get_token_auth_header():
 
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
-        print("permissions not in payload!")
         raise AuthError({
             'code': 'no_permission_data',
             'description': 'No permission in token.'
         }, 401)
 
     if permission not in payload['permissions']:
-        print(permission, "not in permissions!")
         raise AuthError({
             'code': 'missing_permission',
             'description': 'No permission to view this data.'
