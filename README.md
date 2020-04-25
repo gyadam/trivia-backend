@@ -25,7 +25,28 @@ Both the frontend and backend of Udacity Trivia are hosted on heroku, and are ac
 * **Python3** and **Flask** as the server language and server framework
 * **HTML**, **CSS**, and **Javascript** with **Node.js** and **React** for the frontend
 
-### Endpoints
+
+### Frontend
+
+The frontend can be visited at https://udacitytrivia.herokuapp.com/, and allows visitors to play a quiz based on a selected category of questions.
+
+<img src="./images/quiz_view.png" alt="Quiz view" width="700"/>
+
+The users can also log in to access further features of the website. Two roles were setup using Auth0:
+* Admin: has permission to view, add, delete and edit all questions
+* Quizmaster: has permission to view questions along with their answers, but cannot modify them
+
+After login, the navigation bar shows additional options:
+
+<img src="./images/list_view.png" alt="List view" width="700"/>
+
+Admins can add new questions in the Add tab:
+
+<img src="./images/add_question.png" alt="Add questions" width="700"/>
+
+The frontend uses Auth0 to authenticate users and grab the JWT with the user information (including RBAC info). The JWT is included in API calls, and verified by the backend to make sure the user has the required permissions to access the requested data.
+
+### Backend endpoints
 
 All endpoints accept JSON encoded requests and return JSON encoded bodies. The following endpoints were implemented to serve requests from the frontend, interacting with the database:
 
