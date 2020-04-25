@@ -13,8 +13,8 @@ Udacity Trivia is the capstone project created for the Full Stack Developer Nano
 
 Both the frontend and backend of Udacity Trivia are hosted on heroku, and are accessible at the folling URLs:
 
-* Frontend: https://udacitytrivia.herokuapp.com/
-* Backend: http://trivbackend.herokuapp.com/
+* **Frontend**: https://udacitytrivia.herokuapp.com/
+* **Backend**: http://trivbackend.herokuapp.com/
 
 <img src="./images/list_view.png" alt="Homepage of Udacity Trivia" width="700"/>
 
