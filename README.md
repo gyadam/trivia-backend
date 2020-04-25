@@ -1,100 +1,210 @@
-# Full Stack Trivia API Backend
+# Trivia API
 
-## Getting Started
+### Overview
 
-### Installing Dependencies
+Trivia API is a backend web development project created for the Full Stack Developer Nanodegree at Udacity. The goal of the project was to:
 
-#### Python 3.7
+* Create all necessary endpoints on the backend to serve the frontend, enabling the visitor of the website to:
+    * View all trivia questions stored in a database
+    * View trivia questions based on their category
+    * Add and delete questions to the database
+    * Play trivia in a chosen category, getting random questions from the database
+* Apply test-driven development, writing unit tests for each endpoint
+* Make modifications to the frontend and database if necessary
 
-Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
+The site runs on localhost and was created only for educational purposes.
 
-#### Virtual Enviornment
+<img src="./images/trivia_website.png" alt="Homepage of Udacity Trivia" width="700"/>
 
-We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organaized. Instructions for setting up a virual enviornment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+### Tech stack
 
-#### PIP Dependencies
+* **SQLAlchemy ORM** as the ORM library
+* **PostgreSQL** for the database
+* **Python3** and **Flask** as the server language and server framework
+* **HTML**, **CSS**, and **Javascript** with **Node.js** and **React** for the frontend
 
-Once you have your virtual environment setup and running, install dependencies by naviging to the `/backend` directory and running:
+### Endpoints
 
-```bash
-pip install -r requirements.txt
+All endpoints accept JSON encoded requests and return JSON encoded bodies. The following endpoints were implemented to serve requests from the frontend, interacting with the database:
+
+```/questions```
+* ```GET``` request:
+    * returns:
+    * a paginated list of questions according to the provided ```page``` parameter
+    * the total number of questions as ```total_questions,
+    * the categories as ```categories```,
+    * and the boolean ```success``` parameter in the body
+    * example response:
+      ```
+      {
+        "questions": [
+            {
+               "Question": "Who invented Peanut Butter?",
+               "Answer": "George Washington Carver",
+               "Category": 2,
+               "Difficulty": 2
+            },
+            etc...
+            ],
+        "categories":
+            {
+               "1": "Science",
+               "2": History",
+               etc...
+            },
+        "success": true, 
+        "totalQuestions": 13
+      }
+      ```
+    
+* ```POST``` request:
+    * has 2 different functionalities: searching for questions and posting new questions
+    * if ```searchTerm``` is found in the body, a list of case-insensitive search results is returned as well as the total number of results as ```totalQuestions```
+    * otherwise, a new question is inserted using the provided ```questions```, ```answer```, ```difficulty```, ```category``` parameters provided and the boolean ```success``` parameter is returned in the response body
+    * example response in case of searching for the term "peanut":
+    ```
+    {
+      "questions": [
+       {
+         "answer": "George Washington Carver", 
+         "category": 4, 
+         "difficulty": 2, 
+         "id": 12, 
+         "question": "Who invented Peanut Butter?"
+       }
+     ], 
+      "success": true, 
+      "totalQuestions": 1
+    }
+    ```
+    
+    
+
+---
+
+```/questions/[int:question_id] ```
+* ```DELETE``` request:
+    * deletes the question with ID == ```question_id``` from the database
+    * returns the boolean ```success``` parameter in the body
+    
+---
+
+```/categories```
+* ```GET``` request:
+    * returns a list of categories with IDs and category strings in a ```categories``` parameter, such as:
+    ``` 
+    {
+      "success": "True"
+      "categories":
+      {
+         "1": "Science",
+         "2": History",
+         etc...
+      }
+    }
+    ```
+    
+---
+
+```/categories/[int:category_id]/questions```
+* ```GET``` request:
+    * returns:
+    * a list of questions with category == ```category_id```,
+    * the total number of questions as ```totalQuestions```
+    * the current category as ```currentCategory```,
+    * and the boolean ```success``` parameter
+    * example response:
+    ``` 
+    {
+      "success": True
+      "questions": [
+      {
+         "Question": "Who invented Peanut Butter?",
+         "Answer": "George Washington Carver",
+         "Category": 2,
+         "Difficulty": 2
+      },
+      etc...
+      ],
+      "totalQuestions": 5,
+      "currentCategory": 2
+    }
+    ```
+            
+
+---
+
+```/add```
+* ```GET``` request:
+    * assists in loading the 'Add' page
+    * returns the boolean ```success``` parameter in the body
+    
+---
+
+```/quizzes```
+* ```POST``` request:
+    * returns a non-recurring random question from a category based on ```quiz_category.id``` provided in the request body
+    * returns the boolean ```success``` parameter in the body
+    * example:
+    ``` 
+    {
+      "success": True
+      "question":
+      {
+         "Question": "Who invented Peanut Butter?",
+         "Answer": "George Washington Carver",
+         "Category": 2,
+         "Difficulty": 2
+      }
+    }
+    ```
+    
+
+
+### Development setup
+
+**Virtual environment**
+
+To start and run the local development server, initialize and activate a virtual environment:
+
+```
+$ cd YOUR_PROJECT_DIRECTORY_PATH/
+$ virtualenv --no-site-packages env
+$ source env/bin/activate
 ```
 
-This will install all of the required packages we selected within the `requirements.txt` file.
-
-##### Key Dependencies
-
-- [Flask](http://flask.pocoo.org/)  is a lightweight backend microservices framework. Flask is required to handle requests and responses.
-
-- [SQLAlchemy](https://www.sqlalchemy.org/) is the Python SQL toolkit and ORM we'll use handle the lightweight sqlite database. You'll primarily work in app.py and can reference models.py. 
-
-- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension we'll use to handle cross origin requests from our frontend server. 
-
-## Database Setup
-With Postgres running, restore a database using the trivia.psql file provided. From the backend folder in terminal run:
-```bash
-psql trivia < trivia.psql
+Install dependencies:
+```
+$ pip install -r requirements.txt
 ```
 
-## Running the server
+Key Dependencies:
 
-From within the `backend` directory first ensure you are working using your created virtual environment.
+* **Flask** is a lightweight backend microservices framework. Flask is required to handle requests and responses.
+* **SQLAlchemy** is the Python SQL toolkit and ORM that handles the lightweight sqlite database.
+* **Flask-CORS** is the extension used to handle cross origin requests from the frontend server.
+
+**Database Setup**
+
+With Postgres running, restore a database using the trivia.psql file provided. After creating a database called ```trivia```, from the backend folder in terminal run:
+
+``` psql trivia < trivia.psql ```
+
+**Running the server**
 
 To run the server, execute:
 
-```bash
+```
 export FLASK_APP=flaskr
 export FLASK_ENV=development
 flask run
 ```
 
-Setting the `FLASK_ENV` variable to `development` will detect file changes and restart the server automatically.
+**Running the frontend**
 
-Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
+First, install [Node.js and npm](https://nodejs.org/en/).
 
-## Tasks
-
-One note before you delve into your tasks: for each endpoint you are expected to define the endpoint and response data. The frontend will be a plentiful resource because it is set up to expect certain endpoints and response data formats already. You should feel free to specify endpoints in your own way; if you do so, make sure to update the frontend or you will get some unexpected behavior. 
-
-1. Use Flask-CORS to enable cross-domain requests and set response headers. 
-2. Create an endpoint to handle GET requests for questions, including pagination (every 10 questions). This endpoint should return a list of questions, number of total questions, current category, categories. 
-3. Create an endpoint to handle GET requests for all available categories. 
-4. Create an endpoint to DELETE question using a question ID. 
-5. Create an endpoint to POST a new question, which will require the question and answer text, category, and difficulty score. 
-6. Create a POST endpoint to get questions based on category. 
-7. Create a POST endpoint to get questions based on a search term. It should return any questions for whom the search term is a substring of the question. 
-8. Create a POST endpoint to get questions to play the quiz. This endpoint should take category and previous question parameters and return a random questions within the given category, if provided, and that is not one of the previous questions. 
-9. Create error handlers for all expected errors including 400, 404, 422 and 500. 
-
-REVIEW_COMMENT
+Then, to run the frontend, execute:
 ```
-This README is missing documentation of your endpoints. Below is an example for your endpoint to get all categories. Please use it as a reference for creating your documentation and resubmit your code. 
-
-Endpoints
-GET '/categories'
-GET ...
-POST ...
-DELETE ...
-
-GET '/categories'
-- Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
-- Request Arguments: None
-- Returns: An object with a single key, categories, that contains a object of id: category_string key:value pairs. 
-{'1' : "Science",
-'2' : "Art",
-'3' : "Geography",
-'4' : "History",
-'5' : "Entertainment",
-'6' : "Sports"}
-
-```
-
-
-## Testing
-To run the tests, run
-```
-dropdb trivia_test
-createdb trivia_test
-psql trivia_test < trivia.psql
-python test_flaskr.py
+npm start
 ```
