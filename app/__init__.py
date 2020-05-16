@@ -149,8 +149,7 @@ def create_app(test_config=None):
         })
 
     @app.route('/categories/<int:category_id>/questions')
-    @requires_auth('get:questions')
-    def get_categorized_questions(jwt, category_id):
+    def get_categorized_questions(category_id):
         cat_questions = Question.query.filter_by(
             category=category_id).all()
         formatted_questions = [question.format()
