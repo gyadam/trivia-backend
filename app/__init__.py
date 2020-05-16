@@ -47,8 +47,7 @@ def create_app(test_config=None):
         })
 
     @app.route('/questions', methods=['POST'])
-    @requires_auth('post:questions')
-    def add_or_search_questions(jwt):
+    def add_or_search_questions():
         error = False
         body = request.get_json()
         if 'searchTerm' in body:
